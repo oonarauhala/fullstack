@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
 const App = () => {
-  // tallenna napit omaan tilaansa
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
@@ -20,6 +19,9 @@ const App = () => {
       <Statistic title={"Good"} amount={good} />
       <Statistic title={"Neutral"} amount={neutral} />
       <Statistic title={"Bad"} amount={bad} />
+      <Statistic title={"All"} amount={good + bad + neutral} />
+      <Statistic title={"Average"} amount={(good * 1 + bad * (-1)) / (good + neutral + bad)} />
+      <Statistic title={"Positive"} amount={good / (good + neutral + bad)} />
     </div>
   )
 }
