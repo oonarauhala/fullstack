@@ -37,21 +37,30 @@ const Statistics = ({ good, neutral, bad }) => {
     )
   }
   return (
-    <>
-      <StatisticLine title="Good" amount={good} />
-      <StatisticLine title="Neutral" amount={neutral} />
-      <StatisticLine title="Bad" amount={bad} />
-      <StatisticLine title="All" amount={good + neutral + bad} />
-      <StatisticLine title="Average" amount={(good - bad) / (good + neutral + bad)} />
-      <StatisticLine title="Positive" amount={good / (good + neutral + bad)} />
-    </>
+
+    <table>
+      <tbody>
+        <StatisticLine title="Good" amount={good} />
+        <StatisticLine title="Neutral" amount={neutral} />
+        <StatisticLine title="Bad" amount={bad} />
+        <StatisticLine title="All" amount={good + neutral + bad} />
+        <StatisticLine title="Average" amount={(good - bad) / (good + neutral + bad)} />
+        <StatisticLine title="Positive" amount={((good / (good + neutral + bad)) * 100).toString(10) + " %"} />
+      </tbody>
+    </table>
   )
 }
 
 const StatisticLine = ({ title, amount }) => (
-  <>
-    <p>{title} {amount}</p>
-  </>
+  <tr>
+    <td>
+      {title}
+    </td>
+    <td>
+      {amount}
+    </td>
+  </tr>
+
 )
 
 export default App
