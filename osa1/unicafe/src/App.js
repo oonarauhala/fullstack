@@ -11,10 +11,11 @@ const App = () => {
 
   return (
     <div>
-      <Title title={"Give feedback"} />
+      <Title title="Give feedback" />
       <Button handleClick={handleGood} text={"Good"} />
       <Button handleClick={handleNeutral} text={"Neutral"} />
       <Button handleClick={handleBad} text={"Bad"} />
+      <Title title="Statistics" />
       <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
