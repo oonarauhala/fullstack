@@ -15,13 +15,7 @@ const App = () => {
       <Button handleClick={handleGood} text={"Good"} />
       <Button handleClick={handleNeutral} text={"Neutral"} />
       <Button handleClick={handleBad} text={"Bad"} />
-      <Title title={"Statistics"} />
-      <Statistics title={"Good"} amount={good} />
-      <Statistics title={"Neutral"} amount={neutral} />
-      <Statistics title={"Bad"} amount={bad} />
-      <Statistics title={"All"} amount={good + bad + neutral} />
-      <Statistics title={"Average"} amount={(good * 1 + bad * (-1)) / (good + neutral + bad)} />
-      <Statistics title={"Positive"} amount={good / (good + neutral + bad)} />
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
 }
@@ -34,7 +28,27 @@ const Button = ({ handleClick, text }) => (
   </button>
 )
 
-const Statistics = ({ title, amount }) => (
+const Statistics = ({ good, neutral, bad }) => {
+  if (good + bad + neutral === 0) {
+    return (
+      <>
+        <p>No feedback given yet</p>
+      </>
+    )
+  }
+  return (
+    <>
+      <StatisticLine title="Good" amount={good} />
+      <StatisticLine title="Neutral" amount={neutral} />
+      <StatisticLine title="Bad" amount={bad} />
+      <StatisticLine title="All" amount={good + neutral + bad} />
+      <StatisticLine title="Average" amount={(good - bad) / (good + neutral + bad)} />
+      <StatisticLine title="Positive" amount={good / (good + neutral + bad)} />
+    </>
+  )
+}
+
+const StatisticLine = ({ title, amount }) => (
   <>
     <p>{title} {amount}</p>
   </>
