@@ -26,11 +26,30 @@ const App = () => {
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <Points selected={selected} points={points} />
       <Button handleClick={pickAnecdote} text="Next anecdote" />
       <Button handleClick={voteAnecdote} text="Vote" />
+      <br />
+      <h1>Anecdote with the most votes</h1>
+      <BestAnecdote points={points} anecdotes={anecdotes} />
+
     </div>
+  )
+}
+
+const BestAnecdote = ({ points, anecdotes }) => {
+  const max = Math.max(...points)
+  const maxIndex = points.indexOf(max)
+  return (
+    <>
+      <p>
+        {anecdotes[maxIndex]}
+      </p>
+      <p>Has {max} points</p>
+    </>
+
   )
 }
 
