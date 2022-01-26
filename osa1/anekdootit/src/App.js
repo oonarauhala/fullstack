@@ -12,17 +12,38 @@ const App = () => {
   ]
 
   const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState(new Uint8Array(7))
 
-  const pickAnecdote = () => setSelected(Math.floor(Math.random() * 7))
+  const pickAnecdote = () => {
+    setSelected(Math.floor(Math.random() * 7))
+  }
+
+  const voteAnecdote = () => {
+    const copy = [...points]
+    copy[selected] += 1
+    setPoints(copy)
+  }
 
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <button onClick={pickAnecdote}>
-        Next anecdote
-      </button>
+      <Points selected={selected} points={points} />
+      <Button handleClick={pickAnecdote} text="Next anecdote" />
+      <Button handleClick={voteAnecdote} text="Vote" />
     </div>
   )
 }
+
+const Button = ({ handleClick, text }) => (
+  <button onClick={handleClick}>
+    {text}
+  </button>
+)
+
+const Points = ({ selected, points }) => (
+  <p>
+    Has {points[selected]} points
+  </p>
+)
 
 export default App
