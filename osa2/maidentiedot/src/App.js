@@ -29,15 +29,19 @@ const App = () => {
     setFilter(event.target.value)
   }
 
+  const handleButton = country => {
+    setFilter(country)
+  }
+
   return (
     <div>
       find countries <input value={filter} onChange={handleFilterChange} />
-      <Country filterCountries={filterCountries} />
+      <CountryContent filterCountries={filterCountries} handleButton={handleButton} />
     </div>
   );
 }
 
-const Country = ({ filterCountries }) => {
+const CountryContent = ({ filterCountries, handleButton }) => {
   const filteredCountries = filterCountries()
 
   if (filteredCountries.length === 1) {
@@ -65,7 +69,7 @@ const Country = ({ filterCountries }) => {
   }
   const result = filteredCountries.map(country =>
     <div key={country.name.common}>
-      <CountryLine country={country} />
+      <CountryLine country={country} handleButton={handleButton} />
     </div>
   )
   return (
@@ -88,9 +92,10 @@ const OneCountry = ({ country, languages }) => (
   </div>
 )
 
-const CountryLine = ({ country }) => (
+const CountryLine = ({ country, handleButton }) => (
   <div>
     {country.name.common}
+    <button onClick={() => handleButton(country.name.common)}>Show</button>
   </div>
 )
 
