@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
-function App() {
+const App = () => {
 
   const [countries, setCountries] = useState([])
   const [filter, setFilter] = useState('')
@@ -32,12 +32,12 @@ function App() {
   return (
     <div>
       find countries <input value={filter} onChange={handleFilterChange} />
-      <CountryLine filterCountries={filterCountries} />
+      <Country filterCountries={filterCountries} />
     </div>
   );
 }
 
-const CountryLine = ({ filterCountries }) => {
+const Country = ({ filterCountries }) => {
   const filteredCountries = filterCountries()
 
   if (filteredCountries.length === 1) {
@@ -52,14 +52,7 @@ const CountryLine = ({ filterCountries }) => {
     )
     return (
       <div>
-        <h1>{country.name.common}</h1>
-        <p>capital {country.capital[0]}</p>
-        <p>population {country.population}</p>
-        <h2>Languages</h2>
-        <ul>
-          {languages}
-        </ul>
-        <img src={country.flags.png} />
+        <OneCountry country={country} languages={languages} />
       </div>
     )
   }
@@ -72,7 +65,7 @@ const CountryLine = ({ filterCountries }) => {
   }
   const result = filteredCountries.map(country =>
     <div key={country.name.common}>
-      {country.name.common}
+      <CountryLine country={country} />
     </div>
   )
   return (
@@ -81,5 +74,24 @@ const CountryLine = ({ filterCountries }) => {
     </div>
   )
 }
+
+const OneCountry = ({ country, languages }) => (
+  <div>
+    <h1>{country.name.common}</h1>
+    <p>capital {country.capital[0]}</p>
+    <p>population {country.population}</p>
+    <h2>Languages</h2>
+    <ul>
+      {languages}
+    </ul>
+    <img src={country.flags.png} />
+  </div>
+)
+
+const CountryLine = ({ country }) => (
+  <div>
+    {country.name.common}
+  </div>
+)
 
 export default App;
