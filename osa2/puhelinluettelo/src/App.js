@@ -44,11 +44,13 @@ const App = () => {
     }
   }
 
-  const deletePerson = personId => {
-    personService.drop(personId)
-      .then(
-        setPersons(persons.filter(person => person.id !== personId))
-      )
+  const deletePerson = person => {
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personService.drop(person.id)
+        .then(
+          setPersons(persons.filter(oldPerson => oldPerson.id !== person.id))
+        )
+    }
   }
 
   const findPersons = () => {
@@ -112,7 +114,7 @@ const Persons = ({ persons, findPersons, deletePerson }) => {
   const result = filteredPersons.map(person =>
     <div key={person.name}>
       {person.name} {person.number}
-      <button onClick={() => deletePerson(person.id)}>Delete</button>
+      <button onClick={() => deletePerson(person)}>Delete</button>
     </div>
   )
   return (
