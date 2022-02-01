@@ -44,6 +44,13 @@ const App = () => {
     }
   }
 
+  const deletePerson = personId => {
+    personService.drop(personId)
+      .then(
+        setPersons(persons.filter(person => person.id !== personId))
+      )
+  }
+
   const findPersons = () => {
     const result = []
     persons.forEach(person => {
@@ -75,7 +82,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
         newName={newName} newNumber={newNumber} />
       <h2>Numbers</h2>
-      <Persons persons={persons} findPersons={findPersons} />
+      <Persons persons={persons} findPersons={findPersons} deletePerson={deletePerson} />
     </div>
   )
 }
@@ -100,11 +107,12 @@ const NewEntry = ({ addPerson, handleNameChange, handleNumberChange, newName, ne
   </form>
 )
 
-const Persons = ({ persons, findPersons }) => {
+const Persons = ({ persons, findPersons, deletePerson }) => {
   const filteredPersons = findPersons(persons)
   const result = filteredPersons.map(person =>
     <div key={person.name}>
-      <p>{person.name} {person.number}</p>
+      {person.name} {person.number}
+      <button onClick={() => deletePerson(person.id)}>Delete</button>
     </div>
   )
   return (

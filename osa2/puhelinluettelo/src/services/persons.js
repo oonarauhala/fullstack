@@ -16,6 +16,13 @@ const create = person => {
     })
 }
 
+const drop = personId => {
+    const request = axios.delete(baseUrl + `/${personId}`)
+    return request.then(response => {
+        return response.data
+    })
+}
+
 export default {
-    getAll, create
+    getAll, create, drop
 }
