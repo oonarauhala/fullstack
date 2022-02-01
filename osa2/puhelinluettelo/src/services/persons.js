@@ -23,6 +23,13 @@ const drop = personId => {
     })
 }
 
+const update = (personId, newPerson) => {
+    const request = axios.put(baseUrl + `/${personId}`, newPerson)
+    return request.then(response => {
+        return response.data
+    })
+}
+
 export default {
-    getAll, create, drop
+    getAll, create, drop, update
 }
