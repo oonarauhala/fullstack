@@ -6,7 +6,6 @@ const App = () => {
   const [countries, setCountries] = useState([])
   const [filter, setFilter] = useState('')
 
-
   useEffect(() => {
     axios
       .get('https://restcountries.com/v3.1/all')
@@ -89,6 +88,7 @@ const OneCountry = ({ country, languages }) => (
       {languages}
     </ul>
     <img src={country.flags.png} />
+    <Weather capitalName={country.capital[0]}></Weather>
   </div>
 )
 
@@ -98,5 +98,34 @@ const CountryLine = ({ country, handleButton }) => (
     <button onClick={() => handleButton(country.name.common)}>Show</button>
   </div>
 )
+
+const Weather = ({ capitalName }) => {
+  const [weather, setWeather] = useState([])
+  const apiKey = process.env.REACT_APP_API_KEY
+
+  useEffect(() => {
+    const url = `http://api.weatherstack.com/current?access_key=${apiKey}&query=${capitalName}`
+    axios
+      .get(url)
+      .then(response => {
+        setWeather(response.data)
+      })
+  }, [])
+
+  if (weather.length === 0) {
+    return (
+      <p>Loading weather...</p>
+    )
+  }
+
+  return (
+    <div>
+      <h2>Weather in {capitalName}</h2>
+      <p><b>Temperature: </b>{weather.current.temperature} Celcius</p>
+      <img src={weather.current.weather_icons[0]} />
+      <p><b>Wind: </b>{weather.current.wind_speed} mph, direction {weather.current.wind_dir}</p>
+    </div>
+  )
+}
 
 export default App;
