@@ -59,19 +59,24 @@ const App = () => {
         name: newName,
         number: newNumber
       }
-      setMessage(`${newName} was added!`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+
       setNewName('')
       setNewNumber('')
+
       personService
         .create(person)
         .then(returnedPerson => {
+          setMessage(`${person.name} was added!`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
           setPersons(persons.concat(returnedPerson))
         })
         .catch(error => {
-          console.log("Error")
+          setError(`${error.response.data.error}`)
+          setTimeout(() => {
+            setError(null)
+          }, 5000)
         })
 
     }
