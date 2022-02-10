@@ -30,11 +30,16 @@ const oneBlogUndefinedLikes =
     url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html"
 }
 
+const oneBlogNoTitleOrUrl = {
+    author: "Edsger W. Dijkstra",
+    likes: 12
+}
+
 const blogsInDB = async () => {
     const blogs = await Blog.find({})
     return blogs.map(blog => blog.toJSON())
 }
 
 module.exports = {
-    initialBlogs, oneBlog, blogsInDB, oneBlogUndefinedLikes
+    initialBlogs, oneBlog, blogsInDB, oneBlogUndefinedLikes, oneBlogNoTitleOrUrl
 }

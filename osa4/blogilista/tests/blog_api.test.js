@@ -58,10 +58,14 @@ describe('adding blog', () => {
             .expect(200)
             .expect('Content-Type', /application\/json/)
         const notesAtEnd = await helper.blogsInDB()
-        console.log(notesAtEnd)
         const likes = notesAtEnd.map(note => note.likes)
-        console.log(likes)
         expect(likes.at(-1)).toBe(0)
+    })
+    test('if title or url not defined, expect 400', async () => {
+        await api
+            .post('/api/blogs')
+            .send(helper.oneBlogNoTitleOrUrl)
+            .expect(400)
     })
 })
 
