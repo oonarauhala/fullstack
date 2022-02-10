@@ -23,11 +23,18 @@ const oneBlog =
     likes: 12
 }
 
+const oneBlogUndefinedLikes =
+{
+    title: "Canonical string reduction",
+    author: "Edsger W. Dijkstra",
+    url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html"
+}
+
 const blogsInDB = async () => {
     const blogs = await Blog.find({})
     return blogs.map(blog => blog.toJSON())
 }
 
 module.exports = {
-    initialBlogs, oneBlog, blogsInDB
+    initialBlogs, oneBlog, blogsInDB, oneBlogUndefinedLikes
 }

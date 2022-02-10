@@ -51,6 +51,18 @@ describe('adding blog', () => {
         const titles = notesAtEnd.map(res => res.title)
         expect(titles).toContain('Canonical string reduction')
     })
+    test('if likes not defined, set it to 0', async () => {
+        await api
+            .post('/api/blogs')
+            .send(helper.oneBlogUndefinedLikes)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+        const notesAtEnd = await helper.blogsInDB()
+        console.log(notesAtEnd)
+        const likes = notesAtEnd.map(note => note.likes)
+        console.log(likes)
+        expect(likes.at(-1)).toBe(0)
+    })
 })
 
 
