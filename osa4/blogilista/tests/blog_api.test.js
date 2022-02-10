@@ -37,6 +37,10 @@ describe('with blogs in a list', () => {
             .expect(200)
             .expect('Content-Type', /application\/json/)
     })
+    test('blogs are identified with a field `id`', async () => {
+        const response = await api.get('/api/blogs')
+        expect(response.body[0].id).toBeDefined()
+    })
 })
 
 
