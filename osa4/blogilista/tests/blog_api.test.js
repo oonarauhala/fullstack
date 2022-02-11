@@ -69,6 +69,24 @@ describe('adding blog', () => {
     })
 })
 
+describe('delete post', () => {
+    test('works with existing post', async () => {
+        const blogs = await helper.blogsInDB()
+        const idOfBlogToBeDeleted = blogs.at(-1).id
+        await api
+            .delete(`/api/blogs/${idOfBlogToBeDeleted}`)
+            .expect(204)
+        const notesAtEnd = await helper.blogsInDB()
+        expect(notesAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+    })
+    test('gives 400 if id does not exist', async () => {
+        await api
+            .delete('/api/blogs/112233')
+            .expect(400)
+        const notesAtEnd = await helper.blogsInDB()
+        expect(notesAtEnd).toHaveLength(helper.initialBlogs.length)
+    })
+})
 
 afterAll(() => {
     mongoose.connection.close()

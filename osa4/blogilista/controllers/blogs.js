@@ -26,7 +26,23 @@ blogsRouter.post('/', async (request, response) => {
         const savedBlog = await blog.save()
         response.json(savedBlog.toJSON())
     }
+})
 
+blogsRouter.delete('/:id', async (request, response) => {
+    const id = request.params.id
+    const blogs = await Blog.find({})
+    let idExists = false
+    blogs.forEach(blog => {
+        if (blog.id === id) {
+            idExists = true
+        }
+    })
+    if (idExists) {
+        await Blog.findByIdAndRemove(id)
+        response.status(204).end()
+    } else {
+        response.status(400).end()
+    }
 
 })
 
