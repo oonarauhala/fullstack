@@ -38,8 +38,8 @@ describe('adding blog', () => {
             .send(helper.oneBlog)
             .expect(200)
             .expect('Content-type', /application\/json/)
-        const notesAtEnd = await helper.blogsInDB()
-        expect(notesAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+        const blogsAtEnd = await helper.blogsInDB()
+        expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
     })
     test('added data is correct', async () => {
         await api
@@ -47,8 +47,8 @@ describe('adding blog', () => {
             .send(helper.oneBlog)
             .expect(200)
             .expect('Content-type', /application\/json/)
-        const notesAtEnd = await helper.blogsInDB()
-        const titles = notesAtEnd.map(res => res.title)
+        const blogsAtEnd = await helper.blogsInDB()
+        const titles = blogsAtEnd.map(blog => blog.title)
         expect(titles).toContain('Canonical string reduction')
     })
     test('if likes not defined, set it to 0', async () => {
@@ -57,8 +57,8 @@ describe('adding blog', () => {
             .send(helper.oneBlogUndefinedLikes)
             .expect(200)
             .expect('Content-Type', /application\/json/)
-        const notesAtEnd = await helper.blogsInDB()
-        const likes = notesAtEnd.map(note => note.likes)
+        const blogsAtEnd = await helper.blogsInDB()
+        const likes = blogsAtEnd.map(blog => blog.likes)
         expect(likes.at(-1)).toBe(0)
     })
     test('if title or url not defined, expect 400', async () => {
@@ -76,15 +76,50 @@ describe('delete post', () => {
         await api
             .delete(`/api/blogs/${idOfBlogToBeDeleted}`)
             .expect(204)
-        const notesAtEnd = await helper.blogsInDB()
-        expect(notesAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+        const blogsAtEnd = await helper.blogsInDB()
+        expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
     })
     test('gives 400 if id does not exist', async () => {
         await api
             .delete('/api/blogs/112233')
             .expect(400)
-        const notesAtEnd = await helper.blogsInDB()
-        expect(notesAtEnd).toHaveLength(helper.initialBlogs.length)
+        const blogsAtEnd = await helper.blogsInDB()
+        expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+    })
+})
+describe('update blog', () => {
+    test('with correct data', async () => {
+        const blogs = await helper.blogsInDB()
+        const idOfBlogBeingUpdated = blogs[0].id
+        const updatedBlogData = {
+            "title": "Hennan heppablogi4",
+            "author": "Henna H.",
+            "url": "hennanheppablogi4.fi",
+            "likes": 100
+        }
+        await api
+            .put(`/api/blogs/${idOfBlogBeingUpdated}`)
+            .send(updatedBlogData)
+            .expect(200)
+
+        const blogsAtEnd = await helper.blogsInDB()
+        const titles = blogsAtEnd.map(blog => blog.title)
+        expect(titles).toContain('Hennan heppablogi4')
+    })
+    test('with title missing', async () => {
+        const blogs = await helper.blogsInDB()
+        const idOfBlogBeingUpdated = blogs[0].id
+        const updatedBlogData = {
+            "author": "Henna H.",
+            "url": "hennanheppablogi4.fi",
+            "likes": 100
+        }
+        await api
+            .put(`/api/blogs/${idOfBlogBeingUpdated}`)
+            .send(updatedBlogData)
+            .expect(400)
+        const blogsAtEnd = await helper.blogsInDB()
+        expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
     })
 })
 
