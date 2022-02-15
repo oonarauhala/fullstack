@@ -81,7 +81,7 @@ describe('delete post', () => {
     })
     test('gives 400 if id does not exist', async () => {
         await api
-            .delete('/api/blogs/112233')
+            .delete('/api/blogs/620b9d1531644e903c7824ac')
             .expect(400)
         const blogsAtEnd = await helper.blogsInDB()
         expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)

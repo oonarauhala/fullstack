@@ -36,20 +36,13 @@ blogsRouter.post('/', async (request, response) => {
 
 blogsRouter.delete('/:id', async (request, response) => {
     const id = request.params.id
-    const blogs = await Blog.find({})
-    let idExists = false
-    blogs.forEach(blog => {
-        if (blog.id === id) {
-            idExists = true
-        }
-    })
-    if (idExists) {
+    const blog = await Blog.findById(id)
+    if (blog) {
         await Blog.findByIdAndRemove(id)
         response.status(204).end()
     } else {
         response.status(400).end()
     }
-
 })
 
 blogsRouter.put('/:id', async (request, response) => {
