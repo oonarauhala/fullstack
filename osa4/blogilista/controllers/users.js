@@ -3,13 +3,31 @@ const usersRouter = require('express').Router()
 const User = require('../models/user')
 
 usersRouter.post('/', async (request, response) => {
-    const body = request.body
+    const { username, name, password } = request.body
+
+    const userExists = await User.findOne({ username })
+    if (userExists) {
+        return response.status(400).json({
+            error: 'username already taken'
+        })
+    }
+    if (!password) {
+        return response.status(400).json({
+            error: 'password missing'
+        })
+    }
+    if (password.length < 3) {
+        return response.status(400).json({
+            error: 'password too short'
+        })
+    }
+
     const saltRounds = 10
-    const passwordHash = await bcrypt.hash(body.password, saltRounds)
+    const passwordHash = await bcrypt.hash(password, saltRounds)
 
     const user = new User({
-        username: body.username,
-        name: body.name,
+        username: username,
+        name: name,
         passwordHash,
     })
 

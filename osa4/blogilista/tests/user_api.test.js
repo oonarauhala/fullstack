@@ -38,3 +38,66 @@ describe('when there is initially one user at db', () => {
         expect(usernames).toContain(newUser.username)
     })
 })
+describe('Adding a new user', () => {
+    beforeEach(async () => {
+        await User.deleteMany({})
+
+        const passwordHash = await bcrypt.hash('sekret', 10)
+        const user = new User({ username: 'root', passwordHash })
+
+        await user.save()
+    })
+    test('fails if username already exists', async () => {
+        const usersAtStart = await helper.usersInDB()
+        const newUser = {
+            username: 'root',
+            name: 'testi',
+            password: 'aaaaa',
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        expect(result.body.error).toContain('username already taken')
+        const usersAtEnd = await helper.usersInDB()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    })
+    test('fails if password is shorter than 3', async () => {
+        const usersAtStart = await helper.usersInDB()
+        const newUser = {
+            username: 'Kaisa',
+            name: 'testi',
+            password: 'aa',
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        expect(result.body.error).toContain('password too short')
+        const usersAtEnd = await helper.usersInDB()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    })
+    test('fails if no password', async () => {
+        const usersAtStart = await helper.usersInDB()
+        const newUser = {
+            username: 'Kaisa',
+            name: 'testi',
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        expect(result.body.error).toContain('password missing')
+        const usersAtEnd = await helper.usersInDB()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    })
+})
