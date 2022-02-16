@@ -4,14 +4,35 @@ const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
 const helper = require('./test_helper')
+const User = require('../models/user')
+const bcrypt = require('bcrypt')
 
+let token = null
 
 beforeEach(async () => {
     await Blog.deleteMany({})
+
     let blogObject = new Blog(helper.initialBlogs[0])
     await blogObject.save()
     blogObject = new Blog(helper.initialBlogs[1])
     await blogObject.save()
+
+    await User.deleteMany({})
+    const passwordHash = await bcrypt.hash('testpassword', 10)
+    const user = new User({
+        username: 'testUser',
+        name: 'Test User',
+        passwordHash
+    })
+    user.save()
+
+    const response = await api
+        .post('/api/login')
+        .send({
+            username: 'testUser',
+            password: 'testpassword'
+        })
+    token = `bearer ${response.body.token}`
 })
 
 describe('with blogs in a list', () => {
@@ -35,6 +56,7 @@ describe('adding blog', () => {
     test('increases the count of blogs by one', async () => {
         await api
             .post('/api/blogs')
+            .set('Authorization', token)
             .send(helper.oneBlog)
             .expect(200)
             .expect('Content-type', /application\/json/)
@@ -44,6 +66,7 @@ describe('adding blog', () => {
     test('added data is correct', async () => {
         await api
             .post('/api/blogs')
+            .set('Authorization', token)
             .send(helper.oneBlog)
             .expect(200)
             .expect('Content-type', /application\/json/)
@@ -54,6 +77,7 @@ describe('adding blog', () => {
     test('if likes not defined, set it to 0', async () => {
         await api
             .post('/api/blogs')
+            .set('Authorization', token)
             .send(helper.oneBlogUndefinedLikes)
             .expect(200)
             .expect('Content-Type', /application\/json/)
@@ -64,6 +88,7 @@ describe('adding blog', () => {
     test('if title or url not defined, expect 400', async () => {
         await api
             .post('/api/blogs')
+            .set('Authorization', token)
             .send(helper.oneBlogNoTitleOrUrl)
             .expect(400)
     })
@@ -71,10 +96,12 @@ describe('adding blog', () => {
 
 describe('delete post', () => {
     test('works with existing post', async () => {
-        const blogs = await helper.blogsInDB()
-        const idOfBlogToBeDeleted = blogs.at(-1).id
+        const response = await api.get('/api/blogs')
+        const idOfBlogToBeDeleted = response.body[1].id
+
         await api
             .delete(`/api/blogs/${idOfBlogToBeDeleted}`)
+            .set('Authorization', token)
             .expect(204)
         const blogsAtEnd = await helper.blogsInDB()
         expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
@@ -82,6 +109,7 @@ describe('delete post', () => {
     test('gives 400 if id does not exist', async () => {
         await api
             .delete('/api/blogs/620b9d1531644e903c7824ac')
+            .set('Authorization', token)
             .expect(400)
         const blogsAtEnd = await helper.blogsInDB()
         expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
