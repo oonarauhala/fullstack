@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Error from './components/Error'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './index.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -9,6 +12,8 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [newBlog, setNewBlog] = useState(false)
+  const [notification, setNotification] = useState(null)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -37,6 +42,20 @@ const App = () => {
     setNewBlog(true)
   }
 
+  const handleError = message => {
+    setError(message)
+    setTimeout(() => {
+      setError(null)
+    }, 5000)
+  }
+
+  const handleNotification = message => {
+    setNotification(message)
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
 
@@ -50,7 +69,9 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      console.log("Error logging in")
+      handleError("Wrong username or password")
+      setUsername('')
+      setPassword('')
     }
   }
 
@@ -95,16 +116,23 @@ const App = () => {
     <div>
       {user === null ?
         <div>
+          <Error message={error} />
+          <Notification message={notification} />
           <p>log in</p>
           {loginForm()}
         </div>
         :
         <div>
           <h2>blogs</h2>
+          <Error message={error} />
+          <Notification message={notification} />
           <p>{user.name} logged in</p>
           <button onClick={handleLogout}>Logout</button>
           <p></p>
-          <NewBlogForm reloadBlogs={reloadBlogs} />
+          <NewBlogForm
+            reloadBlogs={reloadBlogs}
+            handleNotification={handleNotification}
+            handleError={handleError} />
           <p></p>
           {blogsList()}
         </div>
@@ -113,23 +141,28 @@ const App = () => {
   )
 }
 
-const NewBlogForm = ({ reloadBlogs }) => {
+const NewBlogForm = ({ reloadBlogs, handleNotification, handleError }) => {
   const [blogName, setBlogName] = useState('')
   const [blogAuthor, setBlogAuthor] = useState('')
   const [blogUrl, setBlogUrl] = useState('')
 
   const handleNewBlogSubmit = async event => {
     event.preventDefault()
-    const newBlog = {
-      title: blogName,
-      author: blogAuthor,
-      url: blogUrl
+    try {
+      const newBlog = {
+        title: blogName,
+        author: blogAuthor,
+        url: blogUrl
+      }
+      await blogService.create(newBlog)
+      setBlogName('')
+      setBlogAuthor('')
+      setBlogUrl('')
+      reloadBlogs()
+      handleNotification(`New blog ${newBlog.title} by ${newBlog.author} added!`)
+    } catch {
+      handleError(`Missing blog data`)
     }
-    await blogService.create(newBlog)
-    setBlogName('')
-    setBlogAuthor('')
-    setBlogUrl('')
-    reloadBlogs()
   }
 
   return (
