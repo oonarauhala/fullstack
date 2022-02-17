@@ -10,13 +10,7 @@ const bcrypt = require('bcrypt')
 let token = null
 
 beforeEach(async () => {
-    await Blog.deleteMany({})
-
-    let blogObject = new Blog(helper.initialBlogs[0])
-    await blogObject.save()
-    blogObject = new Blog(helper.initialBlogs[1])
-    await blogObject.save()
-
+    jest.setTimeout(10000)
     await User.deleteMany({})
     const passwordHash = await bcrypt.hash('testpassword', 10)
     const user = new User({
@@ -33,6 +27,17 @@ beforeEach(async () => {
             password: 'testpassword'
         })
     token = `bearer ${response.body.token}`
+
+    await Blog.deleteMany({})
+    await api
+        .post('/api/blogs')
+        .set('Authorization', token)
+        .send(helper.initialBlogs[0])
+    await api
+        .post('/api/blogs')
+        .set('Authorization', token)
+        .send(helper.initialBlogs[1])
+
 })
 
 describe('with blogs in a list', () => {
