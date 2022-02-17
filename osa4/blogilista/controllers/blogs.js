@@ -23,16 +23,17 @@ blogsRouter.post('/', async (request, response) => {
         likes: body.likes,
         user: user._id
     })
-    if (!blog.title || !blog.url) {
-        response.status(400).end()
-    }
     if (!blog.likes) {
         blog.likes = 0
     }
-    const savedBlog = await blog.save()
-    user.blogs = user.blogs.concat(savedBlog._id)
-    await user.save()
-    response.json(savedBlog.toJSON())
+    if (!blog.title || !blog.url) {
+        response.status(400).end()
+    } else {
+        const savedBlog = await blog.save()
+        user.blogs = user.blogs.concat(savedBlog._id)
+        await user.save()
+        response.json(savedBlog.toJSON())
+    }
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
