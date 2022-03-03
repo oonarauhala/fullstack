@@ -6,6 +6,7 @@ import loginService from './services/login'
 import BlogsList from './components/BlogsList'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
+import NewBlogForm from './components/NewBlogForm'
 import './index.css'
 
 
@@ -118,63 +119,6 @@ const App = () => {
       }
     </div>
   )
-}
-
-const NewBlogForm = ({ reloadBlogs, handleNotification, handleError }) => {
-  const [blogName, setBlogName] = useState('')
-  const [blogAuthor, setBlogAuthor] = useState('')
-  const [blogUrl, setBlogUrl] = useState('')
-
-  const handleNewBlogSubmit = async event => {
-    event.preventDefault()
-    try {
-      const newBlog = {
-        title: blogName,
-        author: blogAuthor,
-        url: blogUrl
-      }
-      await blogService.create(newBlog)
-      setBlogName('')
-      setBlogAuthor('')
-      setBlogUrl('')
-      reloadBlogs()
-      handleNotification(`New blog ${newBlog.title} by ${newBlog.author} added!`)
-    } catch {
-      handleError(`Missing blog data`)
-    }
-  }
-
-  return (
-    <div>
-      <h2>create new</h2>
-      <p></p>
-      <form onSubmit={handleNewBlogSubmit}>
-        <div>
-          title:
-          <input
-            value={blogName}
-            onChange={({ target }) => setBlogName(target.value)}
-          />
-        </div>
-        <div>
-          author:
-          <input
-            value={blogAuthor}
-            onChange={({ target }) => setBlogAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url:
-          <input
-            value={blogUrl}
-            onChange={({ target }) => setBlogUrl(target.value)}
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>
-    </div>
-  )
-
 }
 
 export default App
