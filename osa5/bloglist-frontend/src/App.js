@@ -7,6 +7,7 @@ import BlogsList from './components/BlogsList'
 import LoginForm from './components/LoginForm'
 import './index.css'
 
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
@@ -80,7 +81,7 @@ const App = () => {
     window.localStorage.clear()
     setUser(null)
   }
-  
+
   return (
     <div>
       {user === null ?
