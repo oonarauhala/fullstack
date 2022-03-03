@@ -5,6 +5,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogsList from './components/BlogsList'
 import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'
 import './index.css'
 
 
@@ -105,10 +106,12 @@ const App = () => {
           <p>{user.name} logged in</p>
           <button onClick={handleLogout}>Logout</button>
           <p></p>
-          <NewBlogForm
+          <Togglable buttonLabel="New blog">
+            <NewBlogForm
             reloadBlogs={reloadBlogs}
             handleNotification={handleNotification}
             handleError={handleError} />
+          </Togglable>
           <p></p>
           <BlogsList blogs={blogs}/>
         </div>
