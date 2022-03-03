@@ -4,6 +4,7 @@ import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogsList from './components/BlogsList'
+import LoginForm from './components/LoginForm'
 import './index.css'
 
 const App = () => {
@@ -79,33 +80,7 @@ const App = () => {
     window.localStorage.clear()
     setUser(null)
   }
-
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
-  )
-
-
-
+  
   return (
     <div>
       {user === null ?
@@ -113,7 +88,13 @@ const App = () => {
           <Error message={error} />
           <Notification message={notification} />
           <p>log in</p>
-          {loginForm()}
+          <LoginForm 
+            handleLogin={handleLogin} 
+            username={username} 
+            setUsername={setUsername}
+            password={password}
+            setPassword={setPassword}
+            />
         </div>
         :
         <div>
