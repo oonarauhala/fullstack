@@ -84,6 +84,17 @@ const App = () => {
     setUser(null)
   }
 
+  const handleLike = async blog => {
+    blogService.like(blog)
+    // Reload blogs
+    // Behaves undeterministically, sometimes need to click twice
+    blogService.getAll().then(blogs => {
+      setBlogs(blogs)
+      }
+    )
+  }
+    
+
   return (
     <div>
       {user === null ?
@@ -114,7 +125,7 @@ const App = () => {
             handleError={handleError} />
           </Togglable>
           <p></p>
-          <BlogsList blogs={blogs}/>
+          <BlogsList blogs={blogs} handleLike={handleLike}/>
         </div>
       }
     </div>
