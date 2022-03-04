@@ -84,14 +84,12 @@ const App = () => {
     setUser(null)
   }
 
-  const handleLike = async blog => {
-    blogService.like(blog)
-    // Reload blogs
-    // Behaves undeterministically, sometimes need to click twice
-    blogService.getAll().then(blogs => {
+  const handleLike = blog => {
+    blogService.like(blog).then(() => {
+      blogService.getAll().then(blogs => {
       setBlogs(blogs)
-      }
-    )
+      })
+    })
   }
     
 
