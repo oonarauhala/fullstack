@@ -94,6 +94,13 @@ const App = () => {
     )
   }
 
+  const removeBlog = async blog => {
+    if (window.confirm(`Remove ${blog.title}?`)) {
+      await blogService.remove(blog)
+      loadBlogs()
+    }
+  }
+
   return (
     <div>
       {user === null ?
@@ -124,7 +131,7 @@ const App = () => {
             handleError={handleError} />
           </Togglable>
           <p></p>
-          <BlogsList blogs={blogs} handleLike={handleLike}/>
+          <BlogsList blogs={blogs} handleLike={handleLike} removeBlog={removeBlog}/>
         </div>
       }
     </div>
