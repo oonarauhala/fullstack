@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { useState } from 'react'
 
 const Blog = ({blog, handleLike, removeBlog }) => {
@@ -42,6 +43,12 @@ const Blog = ({blog, handleLike, removeBlog }) => {
       <button onClick={toggleVisibility}>view</button>
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  handleLike: PropTypes.func.isRequired,
+  removeBlog: PropTypes.func.isRequired
 }
 
 export default Blog
