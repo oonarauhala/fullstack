@@ -20,9 +20,7 @@ const App = () => {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    loadBlogs()
   }, [])
 
   useEffect(() => {
@@ -36,9 +34,7 @@ const App = () => {
 
   //reload after adding blog
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    loadBlogs()
     setNewBlog(false)
   }, [newBlog])
 
@@ -86,12 +82,17 @@ const App = () => {
 
   const handleLike = blog => {
     blogService.like(blog).then(() => {
-      blogService.getAll().then(blogs => {
-      setBlogs(blogs)
-      })
+      loadBlogs()
     })
   }
-    
+ 
+  const loadBlogs = () => {
+    blogService.getAll().then(blogs => {
+      setBlogs(blogs.sort((first, second) =>
+        (first.likes > second.likes) ? -1 : 1))
+      }
+    )
+  }
 
   return (
     <div>
