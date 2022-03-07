@@ -69,7 +69,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      handleError("Wrong username or password")
+      handleError('Wrong username or password')
       setUsername('')
       setPassword('')
     }
@@ -90,7 +90,7 @@ const App = () => {
     blogService.getAll().then(blogs => {
       setBlogs(blogs.sort((first, second) =>
         (first.likes > second.likes) ? -1 : 1))
-      }
+    }
     )
   }
 
@@ -114,7 +114,7 @@ const App = () => {
             setUsername={setUsername}
             password={password}
             setPassword={setPassword}
-            />
+          />
         </div>
         :
         <div>
@@ -126,9 +126,9 @@ const App = () => {
           <p></p>
           <Togglable buttonLabel="New blog">
             <NewBlogForm
-            reloadBlogs={reloadBlogs}
-            handleNotification={handleNotification}
-            handleError={handleError} />
+              reloadBlogs={reloadBlogs}
+              handleNotification={handleNotification}
+              handleError={handleError} />
           </Togglable>
           <p></p>
           <BlogsList blogs={blogs} handleLike={handleLike} removeBlog={removeBlog}/>
