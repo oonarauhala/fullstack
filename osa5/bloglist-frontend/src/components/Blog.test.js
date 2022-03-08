@@ -5,8 +5,7 @@ import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
 
 describe('<Blog />', () => {
-  beforeEach(() => {
-    const blog = {
+  const blog = {
       title: 'Testiblogi',
       author: 'Testaaja',
       url: 'testiblogi.com',
@@ -16,9 +15,11 @@ describe('<Blog />', () => {
         name: 'T. Testaaja'
       }
     }
-    const mockHandleLike = jest.fn()
-    const mockRemoveBlog = jest.fn()
+  const mockHandleLike = jest.fn()
+  const mockRemoveBlog = jest.fn()
 
+
+  beforeEach(() => {
     render(<Blog blog={blog} handleLike={mockHandleLike} removeBlog={mockRemoveBlog}/>)
   })
 
@@ -34,10 +35,21 @@ describe('<Blog />', () => {
     userEvent.click(button)
 
     const title = screen.findByText('Testiblogi')
-    const url = screen.findByText('testiblogi.com')
-    const likes = screen.findByText('20')
+    const url = screen.getByText('testiblogi.com')
+    const likes = screen.getByText('20')
     expect(title).toBeDefined()
     expect(url).toBeDefined()
     expect(likes).toBeDefined()
+  })
+
+  test('like button yields function call', () => {
+    const viewButton = screen.getByText('view')
+    userEvent.click(viewButton)
+
+    const likeButton = screen.getByText('like')
+    userEvent.click(likeButton)
+    userEvent.click(likeButton)
+
+    expect(mockHandleLike.mock.calls).toHaveLength(2)
   })
 })
