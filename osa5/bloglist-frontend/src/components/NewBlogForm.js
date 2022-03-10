@@ -35,6 +35,7 @@ const NewBlogForm = ({ reloadBlogs, handleNotification, handleError }) => {
             title:
           <input
             value={blogName}
+            id='blogTitle'
             onChange={({ target }) => setBlogName(target.value)}
           />
         </div>
@@ -42,6 +43,7 @@ const NewBlogForm = ({ reloadBlogs, handleNotification, handleError }) => {
             author:
           <input
             value={blogAuthor}
+            id='blogAuthor'
             onChange={({ target }) => setBlogAuthor(target.value)}
           />
         </div>
@@ -49,10 +51,11 @@ const NewBlogForm = ({ reloadBlogs, handleNotification, handleError }) => {
             url:
           <input
             value={blogUrl}
+            id='blogUrl'
             onChange={({ target }) => setBlogUrl(target.value)}
           />
         </div>
-        <button type="submit">create</button>
+        <button id='create-button' type="submit">create</button>
       </form>
     </div>
   )
