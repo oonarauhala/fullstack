@@ -69,6 +69,13 @@ describe('Blog app', function() {
                 cy.get('@blogContent').find('button').contains('like').click()
                 cy.get('@blogContent').find('div').contains('1')
             })
+
+            it('blog owner can remove blog', function() {
+                cy.contains('React testing').parent().as('blogContent')
+                cy.get('@blogContent').find('button').contains('view').click()
+                cy.get('@blogContent').find('button').contains('remove').click()
+                cy.get('html').should('not.contain', 'React testing')
+            })
         })
     })
   })
