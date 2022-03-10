@@ -57,10 +57,17 @@ describe('Blog app', function() {
                     title: 'End to end testing for beginners',
                      author: 'Master test writer', 
                      url: 'testing.net' })
+                cy.createBlog({
+                    title: 'React testing',
+                    author: 'React dev',
+                    url: 'reactblog.fr'
+                })
             })
             it('a blog can be liked', function() {
-                cy.contains('view').click()
-                cy.contains('like').click()
+                cy.contains('React testing').parent().as('blogContent')
+                cy.get('@blogContent').find('button').contains('view').click()
+                cy.get('@blogContent').find('button').contains('like').click()
+                cy.get('@blogContent').find('div').contains('1')
             })
         })
     })
