@@ -51,7 +51,7 @@ describe('Blog app', function() {
             cy.contains('New blog End to end testing for beginners by Master test writer added!')
             cy.get('.blogsList').contains('End to end testing for beginners')
         })
-        describe('and with a blog exists', function() {
+        describe('and when two blogs exist', function() {
             beforeEach(function() {
                 cy.createBlog({ 
                     title: 'End to end testing for beginners',
@@ -75,6 +75,14 @@ describe('Blog app', function() {
                 cy.get('@blogContent').find('button').contains('view').click()
                 cy.get('@blogContent').find('button').contains('remove').click()
                 cy.get('html').should('not.contain', 'React testing')
+            })
+
+            it('blogs are ordered by likes', function() {
+                cy.contains('React testing').parent().as('blogContent')
+                cy.get('@blogContent').find('button').contains('view').click()
+                cy.get('@blogContent').find('button').contains('like').click()
+                cy.get('@blogContent').find('button').contains('hide').click()
+                cy.get('#blogInShort').first().contains('React testing')
             })
         })
     })

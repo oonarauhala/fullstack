@@ -36,7 +36,7 @@ const Blog = ({blog, handleLike, removeBlog }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} id='blogInShort'>
       <div>
         {blog.title} {blog.author}
       </div>
