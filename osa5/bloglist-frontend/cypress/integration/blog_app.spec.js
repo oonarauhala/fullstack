@@ -39,9 +39,7 @@ describe('Blog app', function() {
 
     describe('When logged in', function() {
         beforeEach(function() {
-          cy.get('#username').type('Testi')
-          cy.get('#password').type('asdf')
-          cy.contains('login').click()
+          cy.login({ username: 'Testi',  password: 'asdf'})
         })
 
         it('a blog can be created', function() {
@@ -52,6 +50,18 @@ describe('Blog app', function() {
             cy.get('#create-button').click()
             cy.contains('New blog End to end testing for beginners by Master test writer added!')
             cy.get('.blogsList').contains('End to end testing for beginners')
+        })
+        describe('and with a blog exists', function() {
+            beforeEach(function() {
+                cy.createBlog({ 
+                    title: 'End to end testing for beginners',
+                     author: 'Master test writer', 
+                     url: 'testing.net' })
+            })
+            it('a blog can be liked', function() {
+                cy.contains('view').click()
+                cy.contains('like').click()
+            })
         })
     })
   })
