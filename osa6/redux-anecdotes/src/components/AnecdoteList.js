@@ -5,10 +5,14 @@ import { createNotification, removeNotification } from '../reducers/notification
 const AnecdoteList = props => {
   const dispatch = useDispatch()
 
-  const anecdotes = useSelector(state => 
-    state.anecdotes.sort((first, second) => 
-    (first.votes > second.votes) ? -1 : 1))
-
+  const anecdotes = useSelector(state => {
+    const query = state.filter
+    const filteredAnecdotes = state.anecdotes.filter(anecdote => 
+      anecdote.content.toLowerCase().indexOf(query.toLowerCase()) !== -1)
+    const sortedAnecdotes = filteredAnecdotes.sort((first, second) => 
+      (first.votes > second.votes) ? -1 : 1)
+    return sortedAnecdotes
+  })
 
   const vote = anecdote => {
     dispatch(incrementLikes(anecdote.id))
