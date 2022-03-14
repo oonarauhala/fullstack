@@ -5,7 +5,7 @@ const AnecdoteList = props => {
   const dispatch = useDispatch()
 
   const anecdotes = useSelector(state => 
-    state.sort((first, second) => 
+    state.anecdotes.sort((first, second) => 
     (first.votes > second.votes) ? -1 : 1))
 
 
