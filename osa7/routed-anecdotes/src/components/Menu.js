@@ -7,12 +7,20 @@ import About from './About'
 import CreateNew from './CreateNew'
 import Anecdote from './Anecdote'
 
-const Menu = ({ anecdotes, addNew }) => {
+const Menu = ({ anecdotes, addNew, notification }) => {
   const padding = {
     paddingRight: 5
   }
   return (
-    <Router>
+    <div>
+      <div id='notification'>
+        {notification !== '' ? 
+        <p>{notification}</p>
+        :
+        <></>
+        }
+      </div>
+      <Router>
       <div>
         <Link style={padding} to='/anecdotes'>anecdotes</Link>
         <Link style={padding} to='/create'>create new</Link>
@@ -27,6 +35,7 @@ const Menu = ({ anecdotes, addNew }) => {
         <Route path='/' element={<AnecdoteList anecdotes={anecdotes}/>} />
       </Routes>
     </Router>
+    </div>
   )
 }
 
