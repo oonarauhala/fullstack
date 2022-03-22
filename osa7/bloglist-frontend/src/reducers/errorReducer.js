@@ -9,9 +9,9 @@ const errorSlice = createSlice({
     },
     resetError(state, action) { // eslint-disable-line no-unused-vars
       return null
-    }
-  }
+    },
+  },
 })
 
-export const {createError, resetError} = errorSlice.actions
+export const { createError, resetError } = errorSlice.actions
 export default errorSlice.reducer

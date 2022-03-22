@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { createNotification, resetNotification } from './reducers/notificationReducer'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import {
+  createNotification,
+  resetNotification,
+} from './reducers/notificationReducer'
 import { createError, resetError } from './reducers/errorReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import Error from './components/Error'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import BlogsList from './components/BlogsList'
+import userService from './services/users'
 import LoginForm from './components/LoginForm'
-import Togglable from './components/Togglable'
-import NewBlogForm from './components/NewBlogForm'
+import BlogContent from './components/BlogContent'
 import './index.css'
+import Users from './components/Users'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -21,9 +25,11 @@ const App = () => {
   const dispatch = useDispatch()
   const notification = useSelector(state => state.notification)
   const error = useSelector(state => state.error)
+  const [users, setUsers] = useState([])
 
   useEffect(() => {
     loadBlogs()
+    loadUsers()
   }, [])
 
   useEffect(() => {
@@ -98,6 +104,12 @@ const App = () => {
     })
   }
 
+  const loadUsers = () => {
+    userService.getAllUsers().then(users => {
+      setUsers(users)
+    })
+  }
+
   const removeBlog = async blog => {
     if (window.confirm(`Remove ${blog.title}?`)) {
       await blogService.remove(blog)
@@ -128,19 +140,24 @@ const App = () => {
           <p>{user.name} logged in</p>
           <button onClick={handleLogout}>Logout</button>
           <p></p>
-          <Togglable buttonLabel="New blog">
-            <NewBlogForm
-              reloadBlogs={reloadBlogs}
-              handleNotification={handleNotification}
-              handleError={handleError}
-            />
-          </Togglable>
-          <p></p>
-          <BlogsList
-            blogs={blogs}
-            handleLike={handleLike}
-            removeBlog={removeBlog}
-          />
+          <Router>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <BlogContent
+                    reloadBlogs={reloadBlogs}
+                    handleNotification={handleNotification}
+                    handleError={handleError}
+                    blogs={blogs}
+                    handleLike={handleLike}
+                    removeBlog={removeBlog}
+                  />
+                }
+              />
+              <Route path='/users' element={<Users users={users}/>} />
+            </Routes>
+          </Router>
         </div>
       )}
     </div>
