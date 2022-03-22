@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import { createNotification, resetNotification } from './reducers/notificationReducer'
+import { createError, resetError } from './reducers/errorReducer'
+import { useDispatch, useSelector } from 'react-redux'
 import Error from './components/Error'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
@@ -15,8 +18,9 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [newBlog, setNewBlog] = useState(false)
-  const [notification, setNotification] = useState(null)
-  const [error, setError] = useState(null)
+  const dispatch = useDispatch()
+  const notification = useSelector(state => state.notification)
+  const error = useSelector(state => state.error)
 
   useEffect(() => {
     loadBlogs()
@@ -42,16 +46,16 @@ const App = () => {
   }
 
   const handleError = message => {
-    setError(message)
+    dispatch(createError(message))
     setTimeout(() => {
-      setError(null)
+      dispatch(resetError())
     }, 5000)
   }
 
   const handleNotification = message => {
-    setNotification(message)
+    dispatch(createNotification(message))
     setTimeout(() => {
-      setNotification(null)
+      dispatch(resetNotification())
     }, 5000)
   }
 

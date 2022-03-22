@@ -1,3 +1,4 @@
 build
 converage
 node_modules
+.eslintrc.js
